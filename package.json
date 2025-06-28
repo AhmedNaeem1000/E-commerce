@@ -12,8 +12,7 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\"",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist node_modules/.vite",
-    "prepare": "husky install"
+    "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
