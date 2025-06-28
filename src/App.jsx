@@ -43,6 +43,13 @@ function App() {
     initializeAuth()
     // Initialize default products
     initializeProducts()
+
+    // إضافة تأخير قصير لضمان التهيئة الصحيحة
+    const timer = setTimeout(() => {
+      initializeProducts()
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [initializeAuth, initializeProducts])
 
   return (

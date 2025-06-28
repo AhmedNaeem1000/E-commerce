@@ -25,7 +25,7 @@ import { Helmet } from 'react-helmet-async';
 const STORAGE_KEY = 'products';
 
 const ProductList = () => {
-  const { products, isLoading, error } = useProductData();
+  const { products, isLoading, error, initializeProducts } = useProductData();
   const { t, lang } = useLang();
   const { colorTheme } = useTheme();
   const { addToCart } = useCart();
@@ -41,18 +41,61 @@ const ProductList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
 
+  // تهيئة البيانات عند تحميل الصفحة
+  useEffect(() => {
+    if (!isLoading && (!products || products.length === 0)) {
+      console.log('Initializing products in ProductList...');
+      initializeProducts();
+    }
+  }, [isLoading, products, initializeProducts]);
+
+  // إضافة useEffect إضافي لضمان التهيئة
+  useEffect(() => {
+    // تأخير قصير لضمان تحميل البيانات
+    const timer = setTimeout(() => {
+      if (!isLoading && (!products || products.length === 0)) {
+        console.log('Delayed initialization of products...');
+        initializeProducts();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [isLoading, products, initializeProducts]);
+
   // Filter products based on search and filters
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
+    let filtered = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+      const matchesCategory = !selectedCategory || selectedCategory === '' || product.category === selectedCategory;
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
       const matchesRating = selectedRating === 0 || product.rating >= selectedRating;
 
       return matchesSearch && matchesCategory && matchesPrice && matchesRating;
     });
-  }, [products, searchQuery, selectedCategory, priceRange, selectedRating]);
+
+    // Sort products based on selected sort option
+    switch (sortBy) {
+      case 'price-asc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case 'name':
+      default:
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+
+    return filtered;
+  }, [products, searchQuery, selectedCategory, priceRange, selectedRating, sortBy]);
 
   // Get unique categories for filter
   const categories = [...new Set(products.map(product => product.category))];
@@ -320,7 +363,7 @@ const ProductList = () => {
           </div>
 
           {/* Products Grid/List */}
-          {filteredProducts.length === 0 ? (
+          {!isLoading && filteredProducts.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -334,16 +377,22 @@ const ProductList = () => {
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {lang === 'ar'
-                  ? 'جرب تغيير معايير البحث أو الفلاتر'
-                  : 'Try adjusting your search criteria or filters'
+                  ? products.length === 0
+                    ? 'جاري تحميل المنتجات...'
+                    : 'جرب تغيير معايير البحث أو الفلاتر'
+                  : products.length === 0
+                    ? 'Loading products...'
+                    : 'Try adjusting your search criteria or filters'
                 }
               </p>
-              <button
-                onClick={clearFilters}
-                className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600 transition-colors"
-              >
-                {lang === 'ar' ? 'مسح الفلاتر' : 'Clear Filters'}
-              </button>
+              {products.length > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600 transition-colors"
+                >
+                  {lang === 'ar' ? 'مسح الفلاتر' : 'Clear Filters'}
+                </button>
+              )}
             </motion.div>
           ) : (
             <motion.div

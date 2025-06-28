@@ -220,8 +220,17 @@ const useProductData = create(
       // تهيئة البيانات الافتراضية
       initializeProducts: () => {
         const { products } = get();
-        if (products.length === 0) {
+        // تحقق من أن المنتجات فارغة أو غير معرفة
+        if (!products || products.length === 0) {
+          console.log('Initializing default products...');
           set({ products: DEFAULT_PRODUCTS });
+          // حفظ البيانات الافتراضية في localStorage
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+            console.log('Default products saved to localStorage');
+          } catch (error) {
+            console.error('Error saving default products to localStorage:', error);
+          }
         }
       },
 
@@ -258,6 +267,7 @@ const useProductData = create(
       // إعادة تعيين للبيانات الافتراضية
       resetToDefaults: () => {
         set({ products: DEFAULT_PRODUCTS });
+        saveProductsToStorage(DEFAULT_PRODUCTS);
       },
 
       // الحصول على الإحصائيات
@@ -282,7 +292,21 @@ const useProductData = create(
     }),
     {
       name: 'products-storage',
-      partialize: (state) => ({ products: state.products })
+      partialize: (state) => ({ products: state.products }),
+      // إضافة onRehydrateStorage لضمان التهيئة الصحيحة
+      onRehydrateStorage: () => (state) => {
+        if (state && (!state.products || state.products.length === 0)) {
+          console.log('Rehydrating with default products...');
+          state.products = DEFAULT_PRODUCTS;
+          // حفظ البيانات الافتراضية في localStorage
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+            console.log('Default products saved during rehydration');
+          } catch (error) {
+            console.error('Error saving default products during rehydration:', error);
+          }
+        }
+      }
     }
   )
 );
