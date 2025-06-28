@@ -1,0 +1,307 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+const translations = {
+  en: {
+    // صفحات عامة
+    welcome: 'Welcome',
+    homeDescription: 'Discover our amazing collection',
+    shopNow: 'Shop Now',
+    discoverCollection: 'Discover our amazing collection',
+    backToHome: 'Back to Home',
+    goBack: 'Go Back',
+    needHelp: 'Need help?',
+    contactSupport: 'Contact Support',
+    // المنتجات
+    products: 'Products',
+    productDetails: 'Product Details',
+    addToCart: 'Add to Cart',
+    inStock: 'In Stock',
+    outOfStock: 'Out of Stock',
+    available: 'available',
+    off: 'OFF',
+    productFeatures: 'Product Features',
+    category: 'Category',
+    phones: 'Phones',
+    laptops: 'Laptops',
+    accessories: 'Accessories',
+    // السلة
+    cart: 'Cart',
+    cartEmpty: 'Your cart is empty',
+    cartEmptyDescription: 'Looks like you haven\'t added any items to your cart yet.',
+    startShopping: 'Start Shopping',
+    remove: 'Remove',
+    orderSummary: 'Order Summary',
+    subtotal: 'Subtotal',
+    shipping: 'Shipping',
+    tax: 'Tax',
+    total: 'Total',
+    checkout: 'Proceed to Checkout',
+    // المفضلة
+    wishlist: 'Wishlist',
+    wishlistEmpty: 'Your wishlist is empty',
+    startAdding: 'Start adding some products to your wishlist!',
+    browseProducts: 'Browse Products',
+    removeFromWishlist: 'Remove from wishlist',
+    viewProduct: 'View Product',
+    // تسجيل الدخول/التسجيل
+    login: 'Login',
+    register: 'Register',
+    email: 'Email',
+    emailPlaceholder: 'Email address',
+    password: 'Password',
+    passwordPlaceholder: 'Password',
+    fullName: 'Full Name',
+    fullNamePlaceholder: 'Your full name',
+    alreadyHaveAccount: 'Already have an account? Login',
+    pleaseFillInAllFields: 'Please fill in all fields',
+    loggedInSuccessfully: 'Logged in successfully',
+    signInToYourAccount: 'Sign in to your account',
+    // الشكر/النجاح
+    thankYou: 'Thank You!',
+    orderReceived: 'Your order has been placed successfully. We appreciate your business!',
+    // الخطأ
+    pageNotFound: 'Page Not Found',
+    notFoundDescription: 'The page you\'re looking for doesn\'t exist or has been moved.',
+    // أزرار عامة
+    save: 'Save',
+    cancel: 'Cancel',
+    yes: 'Yes',
+    no: 'No',
+    edit: 'Edit',
+    delete: 'Delete',
+    // رسائل عامة
+    savedSuccessfully: 'Saved successfully',
+    errorOccurred: 'An error occurred',
+    // Navbar
+    home: 'Home',
+    logout: 'Logout',
+    profile: 'Profile',
+    // إعدادات
+    settings: 'Settings',
+    notifications: 'Notifications',
+    security: 'Security',
+    preferences: 'Preferences',
+    notificationPreferences: 'Notification Preferences',
+    receive: 'Receive',
+    notifications_about: 'notifications about your account',
+    securitySettings: 'Security Settings',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    preferencesTitle: 'Preferences',
+    darkMode: 'Dark Mode',
+    switchTheme: 'Switch between light and dark theme',
+    language: 'Language',
+    chooseLanguage: 'Choose Language',
+    english: 'English',
+    arabic: 'العربية',
+    colorTheme: 'Color Theme',
+    chooseColorTheme: 'Choose your preferred color theme',
+    // أدمن
+    adminDashboard: 'Admin Dashboard',
+    addProduct: 'Add Product',
+    manageProducts: 'Manage Products',
+    manageOrders: 'Manage Orders',
+    manageUsers: 'Manage Users',
+    // أخرى
+    productNotFound: 'Product not found',
+    rating: 'Rating',
+    reviews: 'reviews',
+    addReview: 'Add your review',
+    yourRating: 'Your rating',
+    submitReview: 'Submit Review',
+    pleaseLoginToRate: 'Please login to rate this product',
+    ratingSubmitted: 'Your rating has been submitted!',
+    rateAfterPurchase: 'You can rate this product after purchase',
+    rateProduct: 'Rate this product',
+    // الصلاحيات والأمان
+    pleaseLoginToAccess: 'Please login to access this page',
+    adminAccessRequired: 'Admin access required. You do not have permission to view this page.',
+    accessDenied: 'Access denied',
+    insufficientPermissions: 'Insufficient permissions',
+    loading: 'Loading...',
+    // تسجيل الدخول والتسجيل
+    invalidEmail: 'Please enter a valid email address',
+    invalidCredentials: 'Invalid email or password',
+    loginError: 'Login failed. Please try again.',
+    loggingIn: 'Logging in...',
+    dontHaveAccount: "Don't have an account? Register",
+    allFieldsRequired: 'All fields are required',
+    passwordTooShort: 'Password must be at least 6 characters long',
+    passwordsDoNotMatch: 'Passwords do not match',
+    emailAlreadyExists: 'Email already exists',
+    registrationSuccessful: 'Registration successful! Please login.',
+    registrationError: 'Registration failed. Please try again.',
+    creatingAccount: 'Creating account...',
+    confirmPassword: 'Confirm Password',
+    confirmPasswordPlaceholder: 'Confirm your password',
+    searchProducts: 'Search products...',
+    // Hero Section
+    heroTitle: 'Discover Amazing Products',
+    heroSubtitle: 'Shop the latest trends with confidence',
+    heroIntroText: 'Welcome to Ecmorece, your trusted online marketplace. Find the best products at competitive prices with fast delivery and excellent customer service.',
+    viewCategories: 'View Categories',
+  },
+  ar: {
+    // صفحات عامة
+    welcome: 'مرحبًا',
+    homeDescription: 'اكتشف مجموعتنا المميزة',
+    shopNow: 'تسوق الآن',
+    discoverCollection: 'اكتشف مجموعتنا المميزة',
+    backToHome: 'العودة للرئيسية',
+    goBack: 'العودة للخلف',
+    needHelp: 'تحتاج مساعدة؟',
+    contactSupport: 'تواصل مع الدعم',
+    // المنتجات
+    products: 'المنتجات',
+    productDetails: 'تفاصيل المنتج',
+    addToCart: 'أضف إلى السلة',
+    inStock: 'متوفر',
+    outOfStock: 'غير متوفر',
+    available: 'متوفر',
+    off: 'خصم',
+    productFeatures: 'مميزات المنتج',
+    category: 'التصنيف',
+    phones: 'هواتف',
+    laptops: 'لابتوبات',
+    accessories: 'اكسسوارات',
+    // السلة
+    cart: 'السلة',
+    cartEmpty: 'سلتك فارغة',
+    cartEmptyDescription: 'يبدو أنك لم تضف أي منتجات بعد.',
+    startShopping: 'ابدأ التسوق',
+    remove: 'إزالة',
+    orderSummary: 'ملخص الطلب',
+    subtotal: 'المجموع الفرعي',
+    shipping: 'الشحن',
+    tax: 'الضريبة',
+    total: 'الإجمالي',
+    checkout: 'إتمام الشراء',
+    // المفضلة
+    wishlist: 'المفضلة',
+    wishlistEmpty: 'قائمة المفضلة فارغة',
+    startAdding: 'ابدأ بإضافة منتجات إلى المفضلة!',
+    browseProducts: 'تصفح المنتجات',
+    removeFromWishlist: 'إزالة من المفضلة',
+    viewProduct: 'عرض المنتج',
+    // تسجيل الدخول/التسجيل
+    login: 'تسجيل الدخول',
+    register: 'إنشاء حساب',
+    email: 'البريد الإلكتروني',
+    emailPlaceholder: 'البريد الإلكتروني',
+    password: 'كلمة المرور',
+    passwordPlaceholder: 'كلمة المرور',
+    fullName: 'الاسم الكامل',
+    fullNamePlaceholder: 'اسمك الكامل',
+    alreadyHaveAccount: 'لديك حساب؟ سجل الدخول',
+    pleaseFillInAllFields: 'يرجى ملء جميع الحقول',
+    loggedInSuccessfully: 'تم تسجيل الدخول بنجاح',
+    signInToYourAccount: 'سجّل الدخول إلى حسابك',
+    // الشكر/النجاح
+    thankYou: 'شكرًا لك!',
+    orderReceived: 'تم استلام طلبك بنجاح. نشكرك على ثقتك بنا!',
+    // الخطأ
+    pageNotFound: 'الصفحة غير موجودة',
+    notFoundDescription: 'الصفحة التي تبحث عنها غير موجودة أو تم نقلها.',
+    // أزرار عامة
+    save: 'حفظ',
+    cancel: 'إلغاء',
+    yes: 'نعم',
+    no: 'لا',
+    edit: 'تعديل',
+    delete: 'حذف',
+    // رسائل عامة
+    savedSuccessfully: 'تم الحفظ بنجاح',
+    errorOccurred: 'حدث خطأ ما',
+    // Navbar
+    home: 'الرئيسية',
+    logout: 'تسجيل الخروج',
+    profile: 'الملف الشخصي',
+    // إعدادات
+    settings: 'الإعدادات',
+    notifications: 'الإشعارات',
+    security: 'الأمان',
+    preferences: 'التفضيلات',
+    notificationPreferences: 'تفضيلات الإشعارات',
+    receive: 'استلام',
+    notifications_about: 'إشعارات عن حسابك',
+    securitySettings: 'إعدادات الأمان',
+    currentPassword: 'كلمة المرور الحالية',
+    newPassword: 'كلمة المرور الجديدة',
+    confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
+    preferencesTitle: 'التفضيلات',
+    darkMode: 'الوضع الليلي',
+    switchTheme: 'تبديل بين الوضع الفاتح والداكن',
+    language: 'اللغة',
+    chooseLanguage: 'اختر اللغة',
+    english: 'English',
+    arabic: 'العربية',
+    colorTheme: 'لون الموقع',
+    chooseColorTheme: 'اختر اللون المفضل لديك',
+    // أدمن
+    adminDashboard: 'لوحة التحكم',
+    addProduct: 'إضافة منتج',
+    manageProducts: 'إدارة المنتجات',
+    manageOrders: 'إدارة الطلبات',
+    manageUsers: 'إدارة المستخدمين',
+    // أخرى
+    productNotFound: 'المنتج غير موجود',
+    rating: 'التقييم',
+    reviews: 'تقييمات',
+    addReview: 'أضف تقييمك',
+    yourRating: 'تقييمك',
+    submitReview: 'إرسال التقييم',
+    pleaseLoginToRate: 'يرجى تسجيل الدخول لتقييم المنتج',
+    ratingSubmitted: 'تم إرسال تقييمك بنجاح!',
+    rateAfterPurchase: 'يمكنك تقييم المنتج بعد الشراء',
+    rateProduct: 'قيّم المنتج',
+    // الصلاحيات والأمان
+    pleaseLoginToAccess: 'يرجى تسجيل الدخول للوصول لهذه الصفحة',
+    adminAccessRequired: 'مطلوب صلاحيات أدمن. ليس لديك إذن لعرض هذه الصفحة.',
+    accessDenied: 'تم رفض الوصول',
+    insufficientPermissions: 'صلاحيات غير كافية',
+    loading: 'جاري التحميل...',
+    // تسجيل الدخول والتسجيل
+    invalidEmail: 'يرجى إدخال بريد إلكتروني صحيح',
+    invalidCredentials: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+    loginError: 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.',
+    loggingIn: 'جاري تسجيل الدخول...',
+    dontHaveAccount: 'ليس لديك حساب؟ سجل الآن',
+    allFieldsRequired: 'جميع الحقول مطلوبة',
+    passwordTooShort: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+    passwordsDoNotMatch: 'كلمات المرور غير متطابقة',
+    emailAlreadyExists: 'البريد الإلكتروني موجود مسبقاً',
+    registrationSuccessful: 'تم التسجيل بنجاح! يرجى تسجيل الدخول.',
+    registrationError: 'فشل التسجيل. يرجى المحاولة مرة أخرى.',
+    creatingAccount: 'جاري إنشاء الحساب...',
+    confirmPassword: 'تأكيد كلمة المرور',
+    confirmPasswordPlaceholder: 'أكد كلمة المرور',
+    searchProducts: 'البحث في المنتجات...',
+    // Hero Section
+    heroTitle: 'اكتشف منتجات مذهلة',
+    heroSubtitle: 'تسوق أحدث الصيحات بثقة',
+    heroIntroText: 'مرحباً بك في إكموريس، سوقك الإلكتروني الموثوق. اعثر على أفضل المنتجات بأسعار تنافسية مع توصيل سريع وخدمة عملاء ممتازة.',
+    viewCategories: 'تصفح الفئات',
+  }
+};
+
+const LangContext = createContext();
+
+export const LangProvider = ({ children }) => {
+  const [lang, setLang] = useState(() => localStorage.getItem('lang') || 'en');
+
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }, [lang]);
+
+  const t = (key) => translations[lang][key] || key;
+
+  return (
+    <LangContext.Provider value={{ lang, setLang, t }}>
+      {children}
+    </LangContext.Provider>
+  );
+};
+
+export const useLang = () => useContext(LangContext);
